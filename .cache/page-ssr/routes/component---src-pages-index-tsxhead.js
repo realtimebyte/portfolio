@@ -2473,11 +2473,76 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _hooks_useScrollDirection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @hooks/useScrollDirection */ "./src/hooks/useScrollDirection.ts");
+
 
 const Nav = props => {
+  const {
+    isHome
+  } = props;
+  const {
+    0: isMounted,
+    1: setIsMounted
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!isHome);
+  const scrollDirection = (0,_hooks_useScrollDirection__WEBPACK_IMPORTED_MODULE_1__["default"])('down');
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null);
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Nav);
+
+/***/ }),
+
+/***/ "./src/hooks/useScrollDirection.ts":
+/*!*****************************************!*\
+  !*** ./src/hooks/useScrollDirection.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const SCROLL_UP = 'UP';
+const SCROLL_DOWN = 'DOWN';
+const useScrollDirection = (props = {}) => {
+  const {
+    initialDirection,
+    thresholdPixels,
+    off
+  } = props;
+  const {
+    0: scrollDir,
+    1: setScrollDir
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialDirection);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const threshold = thresholdPixels || 0;
+    const lastScrollY = window.pageYOffset;
+    let ticking = false;
+    const updateScrollDir = () => {
+      const scrollY = window.pageYOffset;
+      if (Math.abs(scrollY - lastScrollY) < threshold) {
+        ticking = false;
+        return;
+      }
+      setScrollDir(scrollY > lastScrollY ? SCROLL_DOWN : SCROLL_UP);
+      lastScrollY = scrollY > 0 ? scrollY : 0;
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollDir);
+        ticking = true;
+      }
+    };
+    !off ? window.addEventListener('scroll', onScroll) : setScrollDir(initialDirection);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [initialDirection, thresholdPixels, off]);
+  return scrollDir;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useScrollDirection);
 
 /***/ }),
 
@@ -3106,34 +3171,162 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
 
+const button = styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
+  color: var(--green);
+  background-color: transparent;
+  border: 1px solid var(--green);
+  border-radius: var(--border-radius);
+  font-size: var(--fz-xs);
+  font-family: var(--font-mono);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 1.25rem 1.75rem;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: var(--green-tint);
+    outline: none;
+  }
+  &:after {
+    display: none !important;
+  }
+`;
 const mixins = {
   flexCenter: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
-        display: center;
-        justify-content: center;
-        align-items: center;
-    `,
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
   flexBetween: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    `,
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
   link: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
-        display: inline-block;
-        text-decoration: none;
-        text-decoration-skip-ink: auto;
-        color: inherit;
-        position: relative;
-        transition: var(--transition);
-        &:hover,
-        &:active,
-        &:focus {
-            color: var(--green);
-            outline: 0;
-        }
-    `,
+    display: inline-block;
+    text-decoration: none;
+    text-decoration-skip-ink: auto;
+    color: inherit;
+    position: relative;
+    transition: var(--transition);
+    &:hover,
+    &:active,
+    &:focus {
+      color: var(--green);
+      outline: 0;
+    }
+  `,
   inlineLink: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
-        display: inline-block;
-    `
+    display: inline-block;
+    text-decoration: none;
+    text-decoration-skip-ink: auto;
+    position: relative;
+    transition: var(--transition);
+    color: var(--green);
+    &:hover,
+    &:focus,
+    &:active {
+      color: var(--green);
+      outline: 0;
+      &:after {
+        width: 100%;
+      }
+      & > * {
+        color: var(--green) !important;
+        transition: var(--transition);
+      }
+    }
+    &:after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 1px;
+      position: relative;
+      bottom: 0.37em;
+      background-color: var(--green);
+      transition: var(--transition);
+      opacity: 0.5;
+    }
+  `,
+  button,
+  smallButton: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
+    color: var(--green);
+    background-color: transparent;
+    border: 1px solid var(--green);
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    font-size: var(--fz-xs);
+    font-family: var(--font-mono);
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--green-tint);
+      outline: none;
+    }
+    &:after {
+      display: none !important;
+    }
+  `,
+  bigButton: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
+    color: var(--green);
+    background-color: transparent;
+    border: 1px solid var(--green);
+    border-radius: var(--border-radius);
+    padding: 1.25rem 1.75rem;
+    font-size: var(--fz-sm);
+    font-family: var(--font-mono);
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--green-tint);
+      outline: none;
+    }
+    &:after {
+      display: none !important;
+    }
+  `,
+  boxShadow: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
+    box-shadow: 0 10px 30px -15px var(--navy-shadow);
+    transition: var(--transition);
+
+    &:hover,
+    &:focus {
+      box-shadow: 0 20px 30px -15px var(--navy-shadow);
+    }
+  `,
+  fancyList: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-size: var(--fz-lg);
+    li {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 10px;
+      &:before {
+        content: '▹';
+        position: absolute;
+        left: 0;
+        color: var(--green);
+      }
+    }
+  `,
+  resetList: styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  `
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mixins);
 
@@ -3150,7 +3343,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mixins */ "./src/styles/mixins.ts");
+/* harmony import */ var _styles_mixins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @styles/mixins */ "./src/styles/mixins.ts");
 
 const theme = {
   bp: {
@@ -3166,7 +3359,7 @@ const theme = {
     desktopXL: `max-width: 1560px`,
     desktopXXL: `max-width: 1680px`
   },
-  mixins: _mixins__WEBPACK_IMPORTED_MODULE_0__["default"]
+  mixins: _styles_mixins__WEBPACK_IMPORTED_MODULE_0__["default"]
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (theme);
 
