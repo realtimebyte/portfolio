@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import fonts from '@styles/fonts';
 import variables from '@styles/variables';
+import TransitionStyles from '@styles/TransitionStyles';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -440,6 +441,7 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
   }
 
+  ${TransitionStyles};
 
 `;
 

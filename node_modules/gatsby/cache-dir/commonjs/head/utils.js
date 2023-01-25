@@ -18,6 +18,7 @@ function filterHeadProps(input) {
     },
     params: input.params,
     data: input.data || {},
+    serverData: input.serverData,
     pageContext: input.pageContext
   };
 }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 import Head from '@components/head';
 import Nav from '@components/nav';
-import Loader from "@components/loader/loader";
+import Loader from "@components/loader";
 import theme from "@styles/theme";
 import GlobalStyle from "@styles/GlobalStyle";
 

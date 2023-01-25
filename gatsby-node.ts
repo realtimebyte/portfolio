@@ -54,6 +54,8 @@ export const onCreateWebpackConfig: onCreateWebpackConfigType = async ({ stage, 
         '@styles': path.resolve(__dirname, 'src/styles'),
         '@fonts': path.resolve(__dirname, 'src/fonts'),
         '@hooks': path.resolve(__dirname, 'src/hooks'),
+        '@utils': path.resolve(__dirname, 'src/utils'),
+        '@config': path.resolve(__dirname, 'src/config'),
       }
     }
   })

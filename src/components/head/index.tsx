@@ -25,7 +25,7 @@ const Head = (props: any) => {
   )
 
   const {
-    defaultTitle, 
+    defaultTitle,
     defaultDescription,
     siteUrl,
     defaultImage,
@@ -45,7 +45,7 @@ const Head = (props: any) => {
 
       <meta name='description' content={seo.description} />
       <meta name='image' content={seo.image} />
-      
+
       <meta property='og:title' content={seo.title} />
       <meta property='og:description' content={seo.description} />
       <meta property='og:image' content={seo.image} />
@@ -64,15 +64,3 @@ const Head = (props: any) => {
 }
 
 export default Head;
-
-Head.propTypes = {
-  title: PropTypes.string,
-  description: PropTypes.string,
-  image: PropTypes.string
-}
-
-Head.defaultProps = {
-  title: null,
-  description: null,
-  image: null
-}

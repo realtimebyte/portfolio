@@ -35,6 +35,8 @@ const {
 function headHandlerForSSR({
   pageComponent,
   setHeadComponents,
+  setHtmlAttributes,
+  setBodyAttributes,
   staticQueryContext,
   pageData,
   pagePath
@@ -79,32 +81,40 @@ function headHandlerForSSR({
       const id = (_node$attributes = node.attributes) === null || _node$attributes === void 0 ? void 0 : _node$attributes.id;
       if (!VALID_NODE_NAMES.includes(rawTagName)) {
         warnForInvalidTags(rawTagName);
-      } else {
-        let element;
-        const attributes = {
-          ...node.attributes,
-          "data-gatsby-head": true
-        };
-        if (rawTagName === `script`) {
-          element = /*#__PURE__*/React.createElement("script", (0, _extends2.default)({}, attributes, {
-            dangerouslySetInnerHTML: {
-              __html: node.text
-            }
-          }));
-        } else {
-          element = node.textContent.length > 0 ? /*#__PURE__*/React.createElement(node.rawTagName, attributes, node.textContent) : /*#__PURE__*/React.createElement(node.rawTagName, attributes);
-        }
-        if (id) {
-          if (!seenIds.has(id)) {
-            validHeadNodes.push(element);
-            seenIds.set(id, validHeadNodes.length - 1);
-          } else {
-            const indexOfPreviouslyInsertedNode = seenIds.get(id);
-            validHeadNodes[indexOfPreviouslyInsertedNode] = element;
+        continue;
+      }
+      if (rawTagName === `html`) {
+        setHtmlAttributes(node.attributes);
+        continue;
+      }
+      if (rawTagName === `body`) {
+        setBodyAttributes(node.attributes);
+        continue;
+      }
+      let element;
+      const attributes = {
+        ...node.attributes,
+        "data-gatsby-head": true
+      };
+      if (rawTagName === `script` || rawTagName === `style`) {
+        element = /*#__PURE__*/React.createElement(node.rawTagName, (0, _extends2.default)({}, attributes, {
+          dangerouslySetInnerHTML: {
+            __html: node.text
           }
-        } else {
+        }));
+      } else {
+        element = node.textContent.length > 0 ? /*#__PURE__*/React.createElement(node.rawTagName, attributes, node.textContent) : /*#__PURE__*/React.createElement(node.rawTagName, attributes);
+      }
+      if (id) {
+        if (!seenIds.has(id)) {
           validHeadNodes.push(element);
+          seenIds.set(id, validHeadNodes.length - 1);
+        } else {
+          const indexOfPreviouslyInsertedNode = seenIds.get(id);
+          validHeadNodes[indexOfPreviouslyInsertedNode] = element;
         }
+      } else {
+        validHeadNodes.push(element);
       }
     }
     setHeadComponents(validHeadNodes);
