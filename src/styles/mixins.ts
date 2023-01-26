@@ -86,7 +86,6 @@ const mixins = {
   `,
 
   button,
-
   smallButton: css`
     color: var(--green);
     background-color: transparent;

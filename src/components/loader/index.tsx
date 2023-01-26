@@ -5,7 +5,10 @@ import anime from 'animejs';
 import styled from 'styled-components';
 import IconLoader from '@components/icons/loader';
 
-const StyledLoader = styled.div`
+export interface LoaderProps {
+  isMounted: boolean;
+}
+const StyledLoader = styled.div<LoaderProps>`
   ${({ theme }) => theme.mixins.flexCenter};
   position: fixed;
   top: 0;
@@ -54,7 +57,7 @@ const Loader = (props: any) => {
         strokeDashoffset: [anime.setDashoffset, 0],
       })
       .add({
-        targets: '#logo #B',
+        targets: '#logo #J',
         duration: 700,
         easing: 'easeInOutQuart',
         opacity: 1,

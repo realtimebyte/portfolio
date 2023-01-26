@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'gatsby';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { navLinks } from '@config';
+import { navLinks } from '@config/index';
 import IconLogo from '@components/icons/logo';
 import Menu from '@components/menu';
 import useScrollDirection from '@hooks/useScrollDirection';
 import usePrefersReducedMotion from '@hooks/usePrefersReducedMotion';
-import { loaderDelay } from '@utils';
+import { loaderDelay } from '@utils/index';
 
+interface HeaderProps {
+  scrollDirection: string,
+  scrolledToTop: boolean
+}
 
-const StyledHeader = styled.header`
+const StyledHeader = styled.header<HeaderProps>`
   ${({ theme }) => theme.mixins.flexBetween};
   position: fixed;
   top: 0;
@@ -55,6 +59,34 @@ const StyledHeader = styled.header`
 
 const StyledNav = styled.nav`
   ${({theme}) => theme.mixins.flexBetween};
+  position: relative;
+  width: 100%;
+  color: var(--lightest-slate);
+  font-family: var(--font-mono);
+  counter-reset: item 0;
+  z-index: 12;
+
+  .logo {
+    ${({theme}) => theme.mixins.flexCenter};
+    a {
+      color: var(--green);
+      width: 42px;
+      height: 42px;
+
+      &:hover,
+      &:focus {
+        svg {
+          fill: var(--green-tint);
+        }
+      }
+
+      svg {
+        fill: none;
+        transition: var(--transition);
+        user-select: none;
+      }
+    }
+  }
 `
 const StyledLinks = styled.div`
   display: flex;
@@ -88,12 +120,11 @@ const StyledLinks = styled.div`
         }
       }
     }
-
-    .resume-button{
-      ${({theme}) => theme.mixins.smallButton};
-      margin-left: 15px;
-      font-size: var(--fz-xs);
-    }
+  }
+  .resume-button{
+    ${({theme}) => theme.mixins.smallButton};
+    margin-left: 15px;
+    font-size: var(--fz-xs);
   }
 
 `;
@@ -131,7 +162,7 @@ const Nav = (props:any) => {
   }, []);
 
   const Logo = (
-    <div className="logo" tabIndex = "-1">
+    <div className="logo" tabIndex = {-1}>
       {isHome ? (
         <a href="/" aria-label="home">
           <IconLogo />
@@ -139,10 +170,9 @@ const Nav = (props:any) => {
        )
        :
        (
-         <></>
-         // <Link to="/" aria-label="home">
-         //  <IconLogo />
-         // </Link>
+         <Link to="/" aria-label="home">
+          <IconLogo />
+         </Link>
        )}
     </div>
   );
@@ -155,12 +185,12 @@ const Nav = (props:any) => {
   );
 
   return (
-    <StyledHeader>
-      <nav>
+    <StyledHeader scrollDirection={scrollDirection} scrolledToTop={scrolledToTop}>
+      <StyledNav>
         {prefersReducedMotion ? (
           <>
             {Logo}
-            <div>
+            <StyledLinks>
               <ol>
                 {navLinks &&
                   navLinks.map(({url, name}, i) => (
@@ -171,8 +201,8 @@ const Nav = (props:any) => {
                 }
               </ol>
               <div>{ResumeLink}</div>
-            </div>
-            // <Menu />
+            </StyledLinks>
+            <Menu />
           </>
         ) : (
           <>
@@ -185,7 +215,7 @@ const Nav = (props:any) => {
                 </CSSTransition>
               )}
             </TransitionGroup>
-            <div>
+            <StyledLinks>
               <ol>
                 <TransitionGroup component={null}>
                   {isMounted &&
@@ -209,7 +239,7 @@ const Nav = (props:any) => {
                   </CSSTransition>
                 )}
               </TransitionGroup>
-            </div>
+            </StyledLinks>
             <TransitionGroup component={null}>
               {isMounted && (
                 <CSSTransition classNames={fadeDownClass} timeout={timeout}>
@@ -220,7 +250,7 @@ const Nav = (props:any) => {
           </>
           )
         }
-      </nav>
+      </StyledNav>
     </StyledHeader>
   )
 }

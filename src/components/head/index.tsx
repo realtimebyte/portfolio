@@ -63,4 +63,16 @@ const Head = (props: any) => {
   )
 }
 
+Head.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
+  image: PropTypes.string
+}
+
+Head.defaultProps = {
+  title: null,
+  description: null,
+  image: null
+}
+
 export default Head;

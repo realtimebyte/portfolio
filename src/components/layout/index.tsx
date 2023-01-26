@@ -4,6 +4,8 @@ import styled, { ThemeProvider } from 'styled-components';
 import Head from '@components/head';
 import Nav from '@components/nav';
 import Loader from "@components/loader";
+import Social from "@components/social";
+// import Email from "@components/email";
 import theme from "@styles/theme";
 import GlobalStyle from "@styles/GlobalStyle";
 
@@ -12,6 +14,8 @@ const StyledContent = styled.div`
   flex-direction: column;
   min-height: 100vh;
 `;
+
+
 const Layout = (props: any) => {
   const { children, location } = props;
   const isHome = location.pathname === '/';
@@ -69,6 +73,8 @@ const Layout = (props: any) => {
           ):(
             <StyledContent>
               <Nav isHome={isHome} />
+              <Social isHome={isHome} />
+              {children}
             </StyledContent>
           )}
         </ThemeProvider>
