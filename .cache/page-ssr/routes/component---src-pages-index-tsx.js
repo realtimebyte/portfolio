@@ -5226,8 +5226,9 @@ const Menu = props => {
   let firstFocusableEl;
   let lastFocusableEl;
   const setFocusables = () => {
-    var _navRef$current;
-    menuFocusables = [buttonRef.current, ...Array.from(navRef === null || navRef === void 0 ? void 0 : (_navRef$current = navRef.current) === null || _navRef$current === void 0 ? void 0 : _navRef$current.querySelectorAll('a'))];
+    var _navCurrent$querySele;
+    let navCurrent = navRef.current || null;
+    menuFocusables = [buttonRef.current, ...Array.from((_navCurrent$querySele = navCurrent === null || navCurrent === void 0 ? void 0 : navCurrent.querySelectorAll('a')) !== null && _navCurrent$querySele !== void 0 ? _navCurrent$querySele : [])];
     firstFocusableEl = menuFocusables[0];
     lastFocusableEl = menuFocusables[menuFocusables.length - 1];
   };
@@ -5270,8 +5271,9 @@ const Menu = props => {
         }
     }
   };
-  const onResize = e => {
-    if (e.currentTarget.innerWidth > 768) {
+  const onResize = () => {
+    const width = window.innerWidth;
+    if (width > 768) {
       setMenuOpen(false);
     }
   };
@@ -5380,14 +5382,14 @@ const StyledHeader = styled_components__WEBPACK_IMPORTED_MODULE_8__["default"].h
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    ${props => props.scrollDirection === 'UP' && !props.scrolledToTop && css`
+    ${props => props.scrollDirection === 'UP' && !props.scrolledToTop && styled_components__WEBPACK_IMPORTED_MODULE_8__.css`
         height: var(--nav-scroll-height);
         transform: translateY(0px);
         background-color: rgba(10, 25, 47, 0.85);
         box-shadow: 0 10px 30px -10px var(--navy-shadow);
       `}
 
-    ${props => props.scrollDirection === 'DOWN' && !props.scrolledToTop && css`
+    ${props => props.scrollDirection === 'DOWN' && !props.scrolledToTop && styled_components__WEBPACK_IMPORTED_MODULE_8__.css`
         height: var(--nav-scroll-height);
         transform: translateY(calc(var(--nav-scroll-height) * -1));
         box-shadow: 0 10px 30px -10px var(--navy-shadow);
@@ -5508,7 +5510,7 @@ const Nav = props => {
   }, []);
   const Logo = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "logo",
-    tabIndex: "-1"
+    tabIndex: -1
   }, isHome ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
     href: "/",
     "aria-label": "home"
@@ -5522,7 +5524,10 @@ const Nav = props => {
     target: "_blank",
     rel: "noopener noreferrer"
   }, "Resume");
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledHeader, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledNav, null, prefersReducedMotion ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, Logo, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledLinks, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ol", null, _config_index__WEBPACK_IMPORTED_MODULE_2__.navLinks && _config_index__WEBPACK_IMPORTED_MODULE_2__.navLinks.map(({
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledHeader, {
+    scrollDirection: scrollDirection,
+    scrolledToTop: scrolledToTop
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledNav, null, prefersReducedMotion ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, Logo, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledLinks, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ol", null, _config_index__WEBPACK_IMPORTED_MODULE_2__.navLinks && _config_index__WEBPACK_IMPORTED_MODULE_2__.navLinks.map(({
     url,
     name
   }, i) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
@@ -5583,15 +5588,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/TransitionGroup.js");
-/* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/CSSTransition.js");
-/* harmony import */ var _hooks_usePrefersReducedMotion__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @hooks/usePrefersReducedMotion */ "./src/hooks/usePrefersReducedMotion.ts");
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
+/* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/TransitionGroup.js");
+/* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/CSSTransition.js");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
+/* harmony import */ var _utils_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @utils/index */ "./src/utils/index.ts");
+/* harmony import */ var _hooks_usePrefersReducedMotion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @hooks/usePrefersReducedMotion */ "./src/hooks/usePrefersReducedMotion.ts");
 
 
 
 
-const StyledSideElement = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div`
+
+const StyledSideElement = styled_components__WEBPACK_IMPORTED_MODULE_3__["default"].div`
   width: 40px;
   position: fixed;
   bottom: 0;
@@ -5619,14 +5626,21 @@ const Side = props => {
     0: isMounted,
     1: setIsMounted
   } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!isHome);
-  const prefersReducedMotion = (0,_hooks_usePrefersReducedMotion__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  const prefersReducedMotion = (0,_hooks_usePrefersReducedMotion__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!isHome || prefersReducedMotion) {
+      return;
+    }
+    const timeout = setTimeout(() => setIsMounted(true), _utils_index__WEBPACK_IMPORTED_MODULE_1__.loaderDelay);
+    return () => clearTimeout(timeout);
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledSideElement, {
     orientation: orientation
-  }, prefersReducedMotion ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, children) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, prefersReducedMotion ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, children) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_4__["default"], {
     component: null
-  }, isMounted && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, isMounted && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["default"], {
     classNames: isHome ? 'fade' : '',
-    timeout: isHome ? loaderDelay : 0
+    timeout: isHome ? _utils_index__WEBPACK_IMPORTED_MODULE_1__.loaderDelay : 0
   }, children)));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Side);
@@ -5695,12 +5709,10 @@ const StyledSocialList = styled_components__WEBPACK_IMPORTED_MODULE_4__["default
     }
   }
 `;
-const Social = ({
-  isHome
-}) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_side__WEBPACK_IMPORTED_MODULE_2__["default"], {
-  isHome: isHome,
+const Social = props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_side__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  isHome: props.isHome,
   orientation: "left"
-}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledSocialList, null, _config_index__WEBPACK_IMPORTED_MODULE_3__.socialMedia && _config_index__WEBPACK_IMPORTED_MODULE_3__.socialMedia.map(({
+}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "aabcd"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledSocialList, null, _config_index__WEBPACK_IMPORTED_MODULE_3__.socialMedia && _config_index__WEBPACK_IMPORTED_MODULE_3__.socialMedia.map(({
   url,
   name
 }, i) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {

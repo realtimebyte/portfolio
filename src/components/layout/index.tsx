@@ -5,7 +5,7 @@ import Head from '@components/head';
 import Nav from '@components/nav';
 import Loader from "@components/loader";
 import Social from "@components/social";
-// import Email from "@components/email";
+import Email from "@components/email";
 import theme from "@styles/theme";
 import GlobalStyle from "@styles/GlobalStyle";
 
@@ -74,6 +74,7 @@ const Layout = (props: any) => {
             <StyledContent>
               <Nav isHome={isHome} />
               <Social isHome={isHome} />
+              <Email />
               {children}
             </StyledContent>
           )}

@@ -227,8 +227,10 @@ const Menu = (props: any) => {
     }
   }
 
-  const onResize = (e: Event) => {
-    if (e.currentTarget.innerWidth > 768) {
+  const onResize = () => {
+    const width = window.innerWidth;
+
+    if (width > 768) {
       setMenuOpen(false);
     }
   }
