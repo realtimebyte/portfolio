@@ -18,8 +18,8 @@ export const socialMedia = [
     url: 'https://www.linkedin.com/in/realtimebyte'
   },
   {
-    name: 'StackOverflow',
-    url: 'https://stackoverflow.com/users/19140801/realtimebyte'
+    name: 'CodePen',
+    url: 'https://codepen.io/realtimebyte'
   }
 ]
 
@@ -40,4 +40,10 @@ export const navLinks = [
     name: 'Contact',
     url: '/#contact'
   }
-]
+];
+
+export const colors = {
+  green: '#64ffda',
+  navy: '#0a192f',
+  darkNavy: '#020c1b',
+};

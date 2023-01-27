@@ -74,7 +74,7 @@ const Layout = (props: any) => {
             <StyledContent>
               <Nav isHome={isHome} />
               <Social isHome={isHome} />
-              <Email />
+              <Email isHome={isHome}/>
               {children}
             </StyledContent>
           )}

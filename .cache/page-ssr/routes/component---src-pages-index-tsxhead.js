@@ -2077,6 +2077,130 @@ anime.random = function (min, max) { return Math.floor(Math.random() * (max - mi
 
 /***/ }),
 
+/***/ "./node_modules/camelcase/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/camelcase/index.js ***!
+  \*****************************************/
+/***/ ((module) => {
+
+"use strict";
+
+
+const UPPERCASE = /[\p{Lu}]/u;
+const LOWERCASE = /[\p{Ll}]/u;
+const LEADING_CAPITAL = /^[\p{Lu}](?![\p{Lu}])/gu;
+const IDENTIFIER = /([\p{Alpha}\p{N}_]|$)/u;
+const SEPARATORS = /[_.\- ]+/;
+
+const LEADING_SEPARATORS = new RegExp('^' + SEPARATORS.source);
+const SEPARATORS_AND_IDENTIFIER = new RegExp(SEPARATORS.source + IDENTIFIER.source, 'gu');
+const NUMBERS_AND_IDENTIFIER = new RegExp('\\d+' + IDENTIFIER.source, 'gu');
+
+const preserveCamelCase = (string, toLowerCase, toUpperCase) => {
+	let isLastCharLower = false;
+	let isLastCharUpper = false;
+	let isLastLastCharUpper = false;
+
+	for (let i = 0; i < string.length; i++) {
+		const character = string[i];
+
+		if (isLastCharLower && UPPERCASE.test(character)) {
+			string = string.slice(0, i) + '-' + string.slice(i);
+			isLastCharLower = false;
+			isLastLastCharUpper = isLastCharUpper;
+			isLastCharUpper = true;
+			i++;
+		} else if (isLastCharUpper && isLastLastCharUpper && LOWERCASE.test(character)) {
+			string = string.slice(0, i - 1) + '-' + string.slice(i - 1);
+			isLastLastCharUpper = isLastCharUpper;
+			isLastCharUpper = false;
+			isLastCharLower = true;
+		} else {
+			isLastCharLower = toLowerCase(character) === character && toUpperCase(character) !== character;
+			isLastLastCharUpper = isLastCharUpper;
+			isLastCharUpper = toUpperCase(character) === character && toLowerCase(character) !== character;
+		}
+	}
+
+	return string;
+};
+
+const preserveConsecutiveUppercase = (input, toLowerCase) => {
+	LEADING_CAPITAL.lastIndex = 0;
+
+	return input.replace(LEADING_CAPITAL, m1 => toLowerCase(m1));
+};
+
+const postProcess = (input, toUpperCase) => {
+	SEPARATORS_AND_IDENTIFIER.lastIndex = 0;
+	NUMBERS_AND_IDENTIFIER.lastIndex = 0;
+
+	return input.replace(SEPARATORS_AND_IDENTIFIER, (_, identifier) => toUpperCase(identifier))
+		.replace(NUMBERS_AND_IDENTIFIER, m => toUpperCase(m));
+};
+
+const camelCase = (input, options) => {
+	if (!(typeof input === 'string' || Array.isArray(input))) {
+		throw new TypeError('Expected the input to be `string | string[]`');
+	}
+
+	options = {
+		pascalCase: false,
+		preserveConsecutiveUppercase: false,
+		...options
+	};
+
+	if (Array.isArray(input)) {
+		input = input.map(x => x.trim())
+			.filter(x => x.length)
+			.join('-');
+	} else {
+		input = input.trim();
+	}
+
+	if (input.length === 0) {
+		return '';
+	}
+
+	const toLowerCase = options.locale === false ?
+		string => string.toLowerCase() :
+		string => string.toLocaleLowerCase(options.locale);
+	const toUpperCase = options.locale === false ?
+		string => string.toUpperCase() :
+		string => string.toLocaleUpperCase(options.locale);
+
+	if (input.length === 1) {
+		return options.pascalCase ? toUpperCase(input) : toLowerCase(input);
+	}
+
+	const hasUpperCase = input !== toLowerCase(input);
+
+	if (hasUpperCase) {
+		input = preserveCamelCase(input, toLowerCase, toUpperCase);
+	}
+
+	input = input.replace(LEADING_SEPARATORS, '');
+
+	if (options.preserveConsecutiveUppercase) {
+		input = preserveConsecutiveUppercase(input, toLowerCase);
+	} else {
+		input = toLowerCase(input);
+	}
+
+	if (options.pascalCase) {
+		input = toUpperCase(input.charAt(0)) + input.slice(1);
+	}
+
+	return postProcess(input, toUpperCase);
+};
+
+module.exports = camelCase;
+// TODO: Remove this for the next major release
+module.exports["default"] = camelCase;
+
+
+/***/ }),
+
 /***/ "./node_modules/dom-helpers/esm/addClass.js":
 /*!**************************************************!*\
   !*** ./node_modules/dom-helpers/esm/addClass.js ***!
@@ -4110,6 +4234,763 @@ function stripPrefix(str, prefix = ``) {
 
 /***/ }),
 
+/***/ "./node_modules/gatsby-plugin-image/dist/gatsby-image.module.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/gatsby-plugin-image/dist/gatsby-image.module.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "GatsbyImage": () => (/* binding */ G),
+/* harmony export */   "MainImage": () => (/* binding */ L),
+/* harmony export */   "Placeholder": () => (/* binding */ z),
+/* harmony export */   "StaticImage": () => (/* binding */ U),
+/* harmony export */   "generateImageData": () => (/* binding */ v),
+/* harmony export */   "getImage": () => (/* binding */ S),
+/* harmony export */   "getImageData": () => (/* binding */ I),
+/* harmony export */   "getLowResolutionImageURL": () => (/* binding */ f),
+/* harmony export */   "getSrc": () => (/* binding */ N),
+/* harmony export */   "getSrcSet": () => (/* binding */ x),
+/* harmony export */   "withArtDirection": () => (/* binding */ W)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var camelcase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! camelcase */ "./node_modules/camelcase/index.js");
+/* harmony import */ var camelcase__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(camelcase__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+function n() {
+  return n = Object.assign ? Object.assign.bind() : function (e) {
+    for (var t = 1; t < arguments.length; t++) {
+      var a = arguments[t];
+      for (var i in a) Object.prototype.hasOwnProperty.call(a, i) && (e[i] = a[i]);
+    }
+    return e;
+  }, n.apply(this, arguments);
+}
+function o(e, t) {
+  if (null == e) return {};
+  var a,
+    i,
+    r = {},
+    n = Object.keys(e);
+  for (i = 0; i < n.length; i++) t.indexOf(a = n[i]) >= 0 || (r[a] = e[a]);
+  return r;
+}
+var s = [.25, .5, 1, 2],
+  l = [750, 1080, 1366, 1920],
+  u = [320, 654, 768, 1024, 1366, 1600, 1920, 2048, 2560, 3440, 3840, 4096],
+  d = 4 / 3,
+  c = function (e) {
+    return console.warn(e);
+  },
+  h = function (e, t) {
+    return e - t;
+  },
+  g = function (e) {
+    return e.map(function (e) {
+      return e.src + " " + e.width + "w";
+    }).join(",\n");
+  };
+function p(e) {
+  var t = e.lastIndexOf(".");
+  if (-1 !== t) {
+    var a = e.slice(t + 1);
+    if ("jpeg" === a) return "jpg";
+    if (3 === a.length || 4 === a.length) return a;
+  }
+}
+function m(e) {
+  var t = e.layout,
+    i = void 0 === t ? "constrained" : t,
+    r = e.width,
+    o = e.height,
+    s = e.sourceMetadata,
+    l = e.breakpoints,
+    u = e.aspectRatio,
+    c = e.formats,
+    h = void 0 === c ? ["auto", "webp"] : c;
+  return h = h.map(function (e) {
+    return e.toLowerCase();
+  }), i = camelcase__WEBPACK_IMPORTED_MODULE_1___default()(i), r && o ? n({}, e, {
+    formats: h,
+    layout: i,
+    aspectRatio: r / o
+  }) : (s.width && s.height && !u && (u = s.width / s.height), "fullWidth" === i ? (r = r || s.width || l[l.length - 1], o = o || Math.round(r / (u || d))) : (r || (r = o && u ? o * u : s.width ? s.width : o ? Math.round(o / d) : 800), u && !o ? o = Math.round(r / u) : u || (u = r / o)), n({}, e, {
+    width: r,
+    height: o,
+    aspectRatio: u,
+    layout: i,
+    formats: h
+  }));
+}
+function f(e, t) {
+  var a;
+  return void 0 === t && (t = 20), null == (a = (0, (e = m(e)).generateImageSource)(e.filename, t, Math.round(t / e.aspectRatio), e.sourceMetadata.format || "jpg", e.fit, e.options)) ? void 0 : a.src;
+}
+function v(e) {
+  var t,
+    a = (e = m(e)).pluginName,
+    i = e.sourceMetadata,
+    r = e.generateImageSource,
+    o = e.layout,
+    u = e.fit,
+    d = e.options,
+    h = e.width,
+    f = e.height,
+    v = e.filename,
+    k = e.reporter,
+    E = void 0 === k ? {
+      warn: c
+    } : k,
+    M = e.backgroundColor,
+    S = e.placeholderURL;
+  if (a || E.warn('[gatsby-plugin-image] "generateImageData" was not passed a plugin name'), "function" != typeof r) throw new Error("generateImageSource must be a function");
+  i && (i.width || i.height) ? i.format || (i.format = p(v)) : i = {
+    width: h,
+    height: f,
+    format: (null == (t = i) ? void 0 : t.format) || p(v) || "auto"
+  };
+  var N = new Set(e.formats);
+  (0 === N.size || N.has("auto") || N.has("")) && (N.delete("auto"), N.delete(""), N.add(i.format)), N.has("jpg") && N.has("png") && (E.warn("[" + a + "] Specifying both 'jpg' and 'png' formats is not supported. Using 'auto' instead"), N.delete("jpg" === i.format ? "png" : "jpg"));
+  var x = function (e) {
+      var t = e.filename,
+        a = e.layout,
+        i = void 0 === a ? "constrained" : a,
+        r = e.sourceMetadata,
+        o = e.reporter,
+        u = void 0 === o ? {
+          warn: c
+        } : o,
+        d = e.breakpoints,
+        h = void 0 === d ? l : d,
+        g = Object.entries({
+          width: e.width,
+          height: e.height
+        }).filter(function (e) {
+          var t = e[1];
+          return "number" == typeof t && t < 1;
+        });
+      if (g.length) throw new Error("Specified dimensions for images must be positive numbers (> 0). Problem dimensions you have are " + g.map(function (e) {
+        return e.join(": ");
+      }).join(", "));
+      return "fixed" === i ? function (e) {
+        var t = e.filename,
+          a = e.sourceMetadata,
+          i = e.width,
+          r = e.height,
+          n = e.fit,
+          o = void 0 === n ? "cover" : n,
+          l = e.outputPixelDensities,
+          u = e.reporter,
+          d = void 0 === u ? {
+            warn: c
+          } : u,
+          h = a.width / a.height,
+          g = w(void 0 === l ? s : l);
+        if (i && r) {
+          var p = b(a, {
+            width: i,
+            height: r,
+            fit: o
+          });
+          i = p.width, r = p.height, h = p.aspectRatio;
+        }
+        i ? r || (r = Math.round(i / h)) : i = r ? Math.round(r * h) : 800;
+        var m = i;
+        if (a.width < i || a.height < r) {
+          var f = a.width < i ? "width" : "height";
+          d.warn("\nThe requested " + f + ' "' + ("width" === f ? i : r) + 'px" for the image ' + t + " was larger than the actual image " + f + " of " + a[f] + "px. If possible, replace the current image with a larger one."), "width" === f ? (i = a.width, r = Math.round(i / h)) : i = (r = a.height) * h;
+        }
+        return {
+          sizes: g.filter(function (e) {
+            return e >= 1;
+          }).map(function (e) {
+            return Math.round(e * i);
+          }).filter(function (e) {
+            return e <= a.width;
+          }),
+          aspectRatio: h,
+          presentationWidth: m,
+          presentationHeight: Math.round(m / h),
+          unscaledWidth: i
+        };
+      }(e) : "constrained" === i ? y(e) : "fullWidth" === i ? y(n({
+        breakpoints: h
+      }, e)) : (u.warn("No valid layout was provided for the image at " + t + ". Valid image layouts are fixed, fullWidth, and constrained. Found " + i), {
+        sizes: [r.width],
+        presentationWidth: r.width,
+        presentationHeight: r.height,
+        aspectRatio: r.width / r.height,
+        unscaledWidth: r.width
+      });
+    }(n({}, e, {
+      sourceMetadata: i
+    })),
+    I = {
+      sources: []
+    },
+    W = e.sizes;
+  W || (W = function (e, t) {
+    switch (t) {
+      case "constrained":
+        return "(min-width: " + e + "px) " + e + "px, 100vw";
+      case "fixed":
+        return e + "px";
+      case "fullWidth":
+        return "100vw";
+      default:
+        return;
+    }
+  }(x.presentationWidth, o)), N.forEach(function (e) {
+    var t = x.sizes.map(function (t) {
+      var i = r(v, t, Math.round(t / x.aspectRatio), e, u, d);
+      if (null != i && i.width && i.height && i.src && i.format) return i;
+      E.warn("[" + a + "] The resolver for image " + v + " returned an invalid value.");
+    }).filter(Boolean);
+    if ("jpg" === e || "png" === e || "auto" === e) {
+      var i = t.find(function (e) {
+        return e.width === x.unscaledWidth;
+      }) || t[0];
+      i && (I.fallback = {
+        src: i.src,
+        srcSet: g(t),
+        sizes: W
+      });
+    } else {
+      var n;
+      null == (n = I.sources) || n.push({
+        srcSet: g(t),
+        sizes: W,
+        type: "image/" + e
+      });
+    }
+  });
+  var j = {
+    images: I,
+    layout: o,
+    backgroundColor: M
+  };
+  switch (S && (j.placeholder = {
+    fallback: S
+  }), o) {
+    case "fixed":
+      j.width = x.presentationWidth, j.height = x.presentationHeight;
+      break;
+    case "fullWidth":
+      j.width = 1, j.height = 1 / x.aspectRatio;
+      break;
+    case "constrained":
+      j.width = e.width || x.presentationWidth || 1, j.height = (j.width || 1) / x.aspectRatio;
+  }
+  return j;
+}
+var w = function (e) {
+  return Array.from(new Set([1].concat(e))).sort(h);
+};
+function y(e) {
+  var t,
+    a = e.sourceMetadata,
+    i = e.width,
+    r = e.height,
+    n = e.fit,
+    o = void 0 === n ? "cover" : n,
+    l = e.outputPixelDensities,
+    u = e.breakpoints,
+    d = e.layout,
+    c = a.width / a.height,
+    g = w(void 0 === l ? s : l);
+  if (i && r) {
+    var p = b(a, {
+      width: i,
+      height: r,
+      fit: o
+    });
+    i = p.width, r = p.height, c = p.aspectRatio;
+  }
+  i = i && Math.min(i, a.width), r = r && Math.min(r, a.height), i || r || (r = (i = Math.min(800, a.width)) / c), i || (i = r * c);
+  var m = i;
+  return (a.width < i || a.height < r) && (i = a.width, r = a.height), i = Math.round(i), (null == u ? void 0 : u.length) > 0 ? (t = u.filter(function (e) {
+    return e <= a.width;
+  })).length < u.length && !t.includes(a.width) && t.push(a.width) : t = (t = g.map(function (e) {
+    return Math.round(e * i);
+  })).filter(function (e) {
+    return e <= a.width;
+  }), "constrained" !== d || t.includes(i) || t.push(i), {
+    sizes: t = t.sort(h),
+    aspectRatio: c,
+    presentationWidth: m,
+    presentationHeight: Math.round(m / c),
+    unscaledWidth: i
+  };
+}
+function b(e, t) {
+  var a = e.width / e.height,
+    i = t.width,
+    r = t.height;
+  switch (t.fit) {
+    case "fill":
+      i = t.width ? t.width : e.width, r = t.height ? t.height : e.height;
+      break;
+    case "inside":
+      var n = t.width ? t.width : Number.MAX_SAFE_INTEGER,
+        o = t.height ? t.height : Number.MAX_SAFE_INTEGER;
+      i = Math.min(n, Math.round(o * a)), r = Math.min(o, Math.round(n / a));
+      break;
+    case "outside":
+      var s = t.width ? t.width : 0,
+        l = t.height ? t.height : 0;
+      i = Math.max(s, Math.round(l * a)), r = Math.max(l, Math.round(s / a));
+      break;
+    default:
+      t.width && !t.height && (i = t.width, r = Math.round(t.width / a)), t.height && !t.width && (i = Math.round(t.height * a), r = t.height);
+  }
+  return {
+    width: i,
+    height: r,
+    aspectRatio: i / r
+  };
+}
+var k = ["baseUrl", "urlBuilder", "sourceWidth", "sourceHeight", "pluginName", "formats", "breakpoints", "options"],
+  E = ["images", "placeholder"];
+function M() {
+  return "undefined" != typeof GATSBY___IMAGE && GATSBY___IMAGE;
+}
+var S = function (e) {
+    var t;
+    return function (e) {
+      var t, a;
+      return Boolean(null == e || null == (t = e.images) || null == (a = t.fallback) ? void 0 : a.src);
+    }(e) ? e : function (e) {
+      return Boolean(null == e ? void 0 : e.gatsbyImageData);
+    }(e) ? e.gatsbyImageData : function (e) {
+      return Boolean(null == e ? void 0 : e.gatsbyImage);
+    }(e) ? e.gatsbyImage : null == e || null == (t = e.childImageSharp) ? void 0 : t.gatsbyImageData;
+  },
+  N = function (e) {
+    var t, a, i;
+    return null == (t = S(e)) || null == (a = t.images) || null == (i = a.fallback) ? void 0 : i.src;
+  },
+  x = function (e) {
+    var t, a, i;
+    return null == (t = S(e)) || null == (a = t.images) || null == (i = a.fallback) ? void 0 : i.srcSet;
+  };
+function I(e) {
+  var t,
+    a = e.baseUrl,
+    i = e.urlBuilder,
+    r = e.sourceWidth,
+    s = e.sourceHeight,
+    l = e.pluginName,
+    d = void 0 === l ? "getImageData" : l,
+    c = e.formats,
+    h = void 0 === c ? ["auto"] : c,
+    g = e.breakpoints,
+    p = e.options,
+    m = o(e, k);
+  return null != (t = g) && t.length || "fullWidth" !== m.layout && "FULL_WIDTH" !== m.layout || (g = u), v(n({}, m, {
+    pluginName: d,
+    generateImageSource: function (e, t, a, r) {
+      return {
+        width: t,
+        height: a,
+        format: r,
+        src: i({
+          baseUrl: e,
+          width: t,
+          height: a,
+          options: p,
+          format: r
+        })
+      };
+    },
+    filename: a,
+    formats: h,
+    breakpoints: g,
+    sourceMetadata: {
+      width: r,
+      height: s,
+      format: "auto"
+    }
+  }));
+}
+function W(e, t) {
+  var a,
+    i,
+    r,
+    s = e.images,
+    l = e.placeholder,
+    u = n({}, o(e, E), {
+      images: n({}, s, {
+        sources: []
+      }),
+      placeholder: l && n({}, l, {
+        sources: []
+      })
+    });
+  return t.forEach(function (t) {
+    var a,
+      i = t.media,
+      r = t.image;
+    i ? (r.layout !== e.layout && "development" === "development" && console.warn('[gatsby-plugin-image] Mismatched image layout: expected "' + e.layout + '" but received "' + r.layout + '". All art-directed images use the same layout as the default image'), (a = u.images.sources).push.apply(a, r.images.sources.map(function (e) {
+      return n({}, e, {
+        media: i
+      });
+    }).concat([{
+      media: i,
+      srcSet: r.images.fallback.srcSet
+    }])), u.placeholder && u.placeholder.sources.push({
+      media: i,
+      srcSet: r.placeholder.fallback
+    })) :  true && console.warn("[gatsby-plugin-image] All art-directed images passed to must have a value set for `media`. Skipping.");
+  }), (a = u.images.sources).push.apply(a, s.sources), null != l && l.sources && (null == (i = u.placeholder) || (r = i.sources).push.apply(r, l.sources)), u;
+}
+var j,
+  R = ["src", "srcSet", "loading", "alt", "shouldLoad"],
+  _ = ["fallback", "sources", "shouldLoad"],
+  A = function (t) {
+    var a = t.src,
+      i = t.srcSet,
+      r = t.loading,
+      s = t.alt,
+      l = void 0 === s ? "" : s,
+      u = t.shouldLoad,
+      d = o(t, R);
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", n({}, d, {
+      decoding: "async",
+      loading: r,
+      src: u ? a : void 0,
+      "data-src": u ? void 0 : a,
+      srcSet: u ? i : void 0,
+      "data-srcset": u ? void 0 : i,
+      alt: l
+    }));
+  },
+  O = function (t) {
+    var a = t.fallback,
+      i = t.sources,
+      r = void 0 === i ? [] : i,
+      s = t.shouldLoad,
+      l = void 0 === s || s,
+      u = o(t, _),
+      d = u.sizes || (null == a ? void 0 : a.sizes),
+      c = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(A, n({}, u, a, {
+        sizes: d,
+        shouldLoad: l
+      }));
+    return r.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("picture", null, r.map(function (t) {
+      var a = t.media,
+        i = t.srcSet,
+        r = t.type;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("source", {
+        key: a + "-" + r + "-" + i,
+        type: r,
+        media: a,
+        srcSet: l ? i : void 0,
+        "data-srcset": l ? void 0 : i,
+        sizes: d
+      });
+    }), c) : c;
+  };
+A.propTypes = {
+  src: prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired,
+  alt: prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired,
+  sizes: prop_types__WEBPACK_IMPORTED_MODULE_2__.string,
+  srcSet: prop_types__WEBPACK_IMPORTED_MODULE_2__.string,
+  shouldLoad: prop_types__WEBPACK_IMPORTED_MODULE_2__.bool
+}, O.displayName = "Picture", O.propTypes = {
+  alt: prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired,
+  shouldLoad: prop_types__WEBPACK_IMPORTED_MODULE_2__.bool,
+  fallback: prop_types__WEBPACK_IMPORTED_MODULE_2__.exact({
+    src: prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired,
+    srcSet: prop_types__WEBPACK_IMPORTED_MODULE_2__.string,
+    sizes: prop_types__WEBPACK_IMPORTED_MODULE_2__.string
+  }),
+  sources: prop_types__WEBPACK_IMPORTED_MODULE_2__.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_2__.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_2__.exact({
+    media: prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired,
+    type: prop_types__WEBPACK_IMPORTED_MODULE_2__.string,
+    sizes: prop_types__WEBPACK_IMPORTED_MODULE_2__.string,
+    srcSet: prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired
+  }), prop_types__WEBPACK_IMPORTED_MODULE_2__.exact({
+    media: prop_types__WEBPACK_IMPORTED_MODULE_2__.string,
+    type: prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired,
+    sizes: prop_types__WEBPACK_IMPORTED_MODULE_2__.string,
+    srcSet: prop_types__WEBPACK_IMPORTED_MODULE_2__.string.isRequired
+  })]))
+};
+var T = ["fallback"],
+  z = function (t) {
+    var a = t.fallback,
+      i = o(t, T);
+    return a ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(O, n({}, i, {
+      fallback: {
+        src: a
+      },
+      "aria-hidden": !0,
+      alt: ""
+    })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", n({}, i));
+  };
+z.displayName = "Placeholder", z.propTypes = {
+  fallback: prop_types__WEBPACK_IMPORTED_MODULE_2__.string,
+  sources: null == (j = O.propTypes) ? void 0 : j.sources,
+  alt: function (e, t, a) {
+    return e[t] ? new Error("Invalid prop `" + t + "` supplied to `" + a + "`. Validation failed.") : null;
+  }
+};
+var L = function (t) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(O, n({}, t)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("noscript", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(O, n({}, t, {
+    shouldLoad: !0
+  }))));
+};
+L.displayName = "MainImage", L.propTypes = O.propTypes;
+var q = ["children"],
+  C = function () {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("script", {
+      type: "module",
+      dangerouslySetInnerHTML: {
+        __html: 'const t="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;if(t){const t=document.querySelectorAll("img[data-main-image]");for(let e of t){e.dataset.src&&(e.setAttribute("src",e.dataset.src),e.removeAttribute("data-src")),e.dataset.srcset&&(e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset"));const t=e.parentNode.querySelectorAll("source[data-srcset]");for(let e of t)e.setAttribute("srcset",e.dataset.srcset),e.removeAttribute("data-srcset");e.complete&&(e.style.opacity=1,e.parentNode.parentNode.querySelector("[data-placeholder-image]").style.opacity=0)}}'
+      }
+    });
+  },
+  D = function (t) {
+    var a = t.layout,
+      i = t.width,
+      r = t.height;
+    return "fullWidth" === a ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      "aria-hidden": !0,
+      style: {
+        paddingTop: r / i * 100 + "%"
+      }
+    }) : "constrained" === a ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      style: {
+        maxWidth: i,
+        display: "block"
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+      alt: "",
+      role: "presentation",
+      "aria-hidden": "true",
+      src: "data:image/svg+xml;charset=utf-8,%3Csvg%20height='" + r + "'%20width='" + i + "'%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%3E%3C/svg%3E",
+      style: {
+        maxWidth: "100%",
+        display: "block",
+        position: "static"
+      }
+    })) : null;
+  },
+  P = function (a) {
+    var i = a.children,
+      r = o(a, q);
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(D, n({}, r)), i, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(C, null));
+  },
+  H = ["as", "className", "class", "style", "image", "loading", "imgClassName", "imgStyle", "backgroundColor", "objectFit", "objectPosition"],
+  F = ["style", "className"],
+  B = function (e) {
+    return e.replace(/\n/g, "");
+  },
+  G = function (t) {
+    var a = t.as,
+      i = void 0 === a ? "div" : a,
+      r = t.className,
+      s = t.class,
+      l = t.style,
+      u = t.image,
+      d = t.loading,
+      c = void 0 === d ? "lazy" : d,
+      h = t.imgClassName,
+      g = t.imgStyle,
+      p = t.backgroundColor,
+      m = t.objectFit,
+      f = t.objectPosition,
+      v = o(t, H);
+    if (!u) return console.warn("[gatsby-plugin-image] Missing image prop"), null;
+    s && (r = s), g = n({
+      objectFit: m,
+      objectPosition: f,
+      backgroundColor: p
+    }, g);
+    var w = u.width,
+      y = u.height,
+      b = u.layout,
+      k = u.images,
+      E = u.placeholder,
+      S = u.backgroundColor,
+      N = function (e, t, a) {
+        var i = {},
+          r = "gatsby-image-wrapper";
+        return M() || (i.position = "relative", i.overflow = "hidden"), "fixed" === a ? (i.width = e, i.height = t) : "constrained" === a && (M() || (i.display = "inline-block", i.verticalAlign = "top"), r = "gatsby-image-wrapper gatsby-image-wrapper-constrained"), {
+          className: r,
+          "data-gatsby-image-wrapper": "",
+          style: i
+        };
+      }(w, y, b),
+      x = N.style,
+      I = N.className,
+      W = o(N, F),
+      j = {
+        fallback: void 0,
+        sources: []
+      };
+    return k.fallback && (j.fallback = n({}, k.fallback, {
+      srcSet: k.fallback.srcSet ? B(k.fallback.srcSet) : void 0
+    })), k.sources && (j.sources = k.sources.map(function (e) {
+      return n({}, e, {
+        srcSet: B(e.srcSet)
+      });
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(i, n({}, W, {
+      style: n({}, x, l, {
+        backgroundColor: p
+      }),
+      className: I + (r ? " " + r : "")
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(P, {
+      layout: b,
+      width: w,
+      height: y
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(z, n({}, function (e, t, a, i, r, o, s, l) {
+      var u = {};
+      o && (u.backgroundColor = o, "fixed" === a ? (u.width = i, u.height = r, u.backgroundColor = o, u.position = "relative") : ("constrained" === a || "fullWidth" === a) && (u.position = "absolute", u.top = 0, u.left = 0, u.bottom = 0, u.right = 0)), s && (u.objectFit = s), l && (u.objectPosition = l);
+      var d = n({}, e, {
+        "aria-hidden": !0,
+        "data-placeholder-image": "",
+        style: n({
+          opacity: 1,
+          transition: "opacity 500ms linear"
+        }, u)
+      });
+      return M() || (d.style = {
+        height: "100%",
+        left: 0,
+        position: "absolute",
+        top: 0,
+        width: "100%"
+      }), d;
+    }(E, 0, b, w, y, S, m, f))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(L, n({
+      "data-gatsby-image-ssr": "",
+      className: h
+    }, v, function (e, t, a, i, r) {
+      return void 0 === r && (r = {}), M() || (r = n({
+        height: "100%",
+        left: 0,
+        position: "absolute",
+        top: 0,
+        transform: "translateZ(0)",
+        transition: "opacity 250ms linear",
+        width: "100%",
+        willChange: "opacity"
+      }, r)), n({}, a, {
+        loading: i,
+        shouldLoad: e,
+        "data-main-image": "",
+        style: n({}, r, {
+          opacity: 0
+        })
+      });
+    }("eager" === c, 0, j, c, g)))));
+  },
+  V = ["src", "__imageData", "__error", "width", "height", "aspectRatio", "tracedSVGOptions", "placeholder", "formats", "quality", "transformOptions", "jpgOptions", "pngOptions", "webpOptions", "avifOptions", "blurredOptions", "breakpoints", "outputPixelDensities"],
+  U = function (t) {
+    return function (a) {
+      var i = a.src,
+        r = a.__imageData,
+        s = a.__error,
+        l = o(a, V);
+      return s && console.warn(s), r ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(t, n({
+        image: r
+      }, l)) : (console.warn("Image not loaded", i), s || "development" !== "development" || console.warn('Please ensure that "gatsby-plugin-image" is included in the plugins array in gatsby-config.js, and that your version of gatsby is at least 2.24.78'), null);
+    };
+  }(G),
+  X = function (e, t) {
+    return "fullWidth" !== e.layout || "width" !== t && "height" !== t || !e[t] ? prop_types__WEBPACK_IMPORTED_MODULE_2___default().number.apply((prop_types__WEBPACK_IMPORTED_MODULE_2___default()), [e, t].concat([].slice.call(arguments, 2))) : new Error('"' + t + '" ' + e[t] + " may not be passed when layout is fullWidth.");
+  },
+  Y = new Set(["fixed", "fullWidth", "constrained"]),
+  Z = {
+    src: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().string.isRequired),
+    alt: function (e, t, a) {
+      return e.alt || "" === e.alt ? prop_types__WEBPACK_IMPORTED_MODULE_2___default().string.apply((prop_types__WEBPACK_IMPORTED_MODULE_2___default()), [e, t, a].concat([].slice.call(arguments, 3))) : new Error('The "alt" prop is required in ' + a + '. If the image is purely presentational then pass an empty string: e.g. alt="". Learn more: https://a11y-style-guide.com/style-guide/section-media.html');
+    },
+    width: X,
+    height: X,
+    sizes: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().string),
+    layout: function (e) {
+      if (void 0 !== e.layout && !Y.has(e.layout)) return new Error("Invalid value " + e.layout + '" provided for prop "layout". Defaulting to "constrained". Valid values are "fixed", "fullWidth" or "constrained".');
+    }
+  };
+U.displayName = "StaticImage", U.propTypes = Z;
+
+
+/***/ }),
+
+/***/ "./src/components/email/index.tsx":
+/*!****************************************!*\
+  !*** ./src/components/email/index.tsx ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
+/* harmony import */ var _components_side__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @components/side */ "./src/components/side/index.tsx");
+/* harmony import */ var _config_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @config/index */ "./src/config/index.ts");
+
+
+
+
+const StyledLinkWrapper = styled_components__WEBPACK_IMPORTED_MODULE_3__["default"].div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 90px;
+    margin: 0 auto;
+    background-color: var(--light-slate);
+  }
+
+  a {
+    margin: 20px auto;
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fz-xxs);
+    line-height: var(--fz-lg);
+    letter-spacing: 0.1em;
+    writing-mode: vertical-rl;
+
+    &:hover,
+    &:focus {
+      transform: translateY(-3px);
+    }
+  }
+`;
+const Email = props => {
+  const {
+    isHome
+  } = props;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_side__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    isHome: isHome,
+    orientation: "right"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledLinkWrapper, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: `mailto:${_config_index__WEBPACK_IMPORTED_MODULE_2__.email}`
+  }, _config_index__WEBPACK_IMPORTED_MODULE_2__.email)));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Email);
+
+/***/ }),
+
 /***/ "./src/components/head/index.tsx":
 /*!***************************************!*\
   !*** ./src/components/head/index.tsx ***!
@@ -4121,7 +5002,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _public_page_data_sq_d_1994492073_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../public/page-data/sq/d/1994492073.json */ "./public/page-data/sq/d/1994492073.json");
+Object(function webpackMissingModule() { var e = new Error("Cannot find module '../../../public/page-data/sq/d/1994492073.json'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_helmet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-helmet */ "./node_modules/react-helmet/es/Helmet.js");
@@ -4144,7 +5025,7 @@ const Head = props => {
   } = (0,_reach_router__WEBPACK_IMPORTED_MODULE_3__.useLocation)();
   const {
     site
-  } = _public_page_data_sq_d_1994492073_json__WEBPACK_IMPORTED_MODULE_0__.data;
+  } = Object(function webpackMissingModule() { var e = new Error("Cannot find module '../../../public/page-data/sq/d/1994492073.json'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
   const {
     defaultTitle,
     defaultDescription,
@@ -4818,15 +5699,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
 /* harmony import */ var _components_head__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @components/head */ "./src/components/head/index.tsx");
 /* harmony import */ var _components_nav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @components/nav */ "./src/components/nav/index.tsx");
 /* harmony import */ var _components_loader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @components/loader */ "./src/components/loader/index.tsx");
 /* harmony import */ var _components_social__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @components/social */ "./src/components/social/index.tsx");
-/* harmony import */ var _styles_theme__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @styles/theme */ "./src/styles/theme.ts");
-/* harmony import */ var _styles_GlobalStyle__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @styles/GlobalStyle */ "./src/styles/GlobalStyle.ts");
+/* harmony import */ var _components_email__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @components/email */ "./src/components/email/index.tsx");
+/* harmony import */ var _styles_theme__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @styles/theme */ "./src/styles/theme.ts");
+/* harmony import */ var _styles_GlobalStyle__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @styles/GlobalStyle */ "./src/styles/GlobalStyle.ts");
 
 
 
@@ -4834,10 +5716,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import Email from "@components/email";
 
 
-const StyledContent = styled_components__WEBPACK_IMPORTED_MODULE_7__["default"].div`
+
+const StyledContent = styled_components__WEBPACK_IMPORTED_MODULE_8__["default"].div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -4889,9 +5771,9 @@ const Layout = props => {
   }, [isLoading]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_head__WEBPACK_IMPORTED_MODULE_1__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "root"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(styled_components__WEBPACK_IMPORTED_MODULE_7__.ThemeProvider, {
-    theme: _styles_theme__WEBPACK_IMPORTED_MODULE_5__["default"]
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_styles_GlobalStyle__WEBPACK_IMPORTED_MODULE_6__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(styled_components__WEBPACK_IMPORTED_MODULE_8__.ThemeProvider, {
+    theme: _styles_theme__WEBPACK_IMPORTED_MODULE_6__["default"]
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_styles_GlobalStyle__WEBPACK_IMPORTED_MODULE_7__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
     className: "skip-to-content",
     href: "#content"
   }, "Skip to Content"), isLoading && isHome ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_loader__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -4900,11 +5782,13 @@ const Layout = props => {
     isHome: isHome
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_social__WEBPACK_IMPORTED_MODULE_4__["default"], {
     isHome: isHome
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_email__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    isHome: isHome
   }), children))));
 };
 Layout.propTypes = {
-  children: (prop_types__WEBPACK_IMPORTED_MODULE_8___default().node.isRequired),
-  location: (prop_types__WEBPACK_IMPORTED_MODULE_8___default().object.isRequired)
+  children: (prop_types__WEBPACK_IMPORTED_MODULE_9___default().node.isRequired),
+  location: (prop_types__WEBPACK_IMPORTED_MODULE_9___default().object.isRequired)
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Layout);
 
@@ -5575,6 +6459,343 @@ const Nav = props => {
 
 /***/ }),
 
+/***/ "./src/components/sections/about/index.tsx":
+/*!*************************************************!*\
+  !*** ./src/components/sections/about/index.tsx ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
+/* harmony import */ var gatsby_plugin_image__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! gatsby-plugin-image */ "./node_modules/gatsby-plugin-image/dist/gatsby-image.module.js");
+
+
+
+const StyledAboutSection = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].section`
+  max-width: 900px;
+
+  .inner {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-gap: 50px;
+
+    @media (max-width: 768px) {
+      display: block;
+    }
+  }
+`;
+const StyledText = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div`
+  ul.skills-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 200px));
+    grid-gap: 0 10px;
+    padding: 0;
+    margin: 20px 0 0 0;
+    overflow: hidden;
+    list-style: none;
+
+    li {
+      position: relative;
+      margin-bottom: 10px;
+      padding-left: 20px;
+      font-family: var(--font-mono);
+      font-size: var(--fz-xs);
+
+      &:before {
+        content: '▹';
+        position: absolute;
+        left: 0;
+        color: var(--green);
+        font-size: var(--fz-sm);
+        line-height: 12px;
+      }
+    }
+  }
+`;
+const StyledPic = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div`
+  position: relative;
+  max-width: 300px;
+
+  @media (max-width: 768px) {
+    margin: 50px auto 0;
+    width: 70%;
+  }
+
+  .wrapper {
+    ${({
+  theme
+}) => theme.mixins.boxShadow};
+    display: block;
+    position: relative;
+    width: 100%;
+    border-radius: var(--border-radius);
+    background-color: var(--green);
+
+    &:hover,
+    &:focus {
+      outline: 0;
+
+      &:after {
+        top: 15px;
+        left: 15px;
+      }
+
+      .img {
+        filter: none;
+        mix-blend-mode: normal;
+      }
+    }
+
+    .img {
+      position: relative;
+      border-radius: var(--border-radius);
+      mix-blend-mode: multiply;
+      filter: grayscale(100%) contrast(1);
+      transition: var(--transition);
+    }
+
+    &:before,
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    &:before {
+      top: 0;
+      left: 0;
+      background-color: var(--navy);
+      mix-blend-mode: screen;
+    }
+
+    &:after {
+      border: 2px solid var(--green);
+      top: 20px;
+      left: 20px;
+      z-index: -1;
+    }
+  }
+`;
+const About = () => {
+  const skills = ['JavaScript (ES6+)', 'TypeScript', 'React', 'Eleventy', 'Node.js', 'WordPress'];
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledAboutSection, {
+    id: "about"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
+    className: "numbered-heading"
+  }, "About me"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "inner"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledText, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Hello! My name is LingZhi and I enjoy creating things that live on the internet. My interest in web development started back in 2012 when I decided to try editing custom Tumblr themes \u2014 turns out hacking together a custom reblog button taught me a lot about HTML & CSS!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Fast-forward to today, and I\u2019ve had the privilege of working at", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: "https://us.mullenlowe.com/"
+  }, "an advertising agency"), ",", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: "https://starry.com/"
+  }, "a start-up"), ",", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: "https://www.apple.com/"
+  }, "a huge corporation"), ", and", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: "https://scout.camd.northeastern.edu/"
+  }, "a student-led design studio"), ". My main focus these days is building accessible, inclusive products and digital experiences at ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: "https://upstatement.com/"
+  }, "Upstatement"), " for a variety of clients."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "I also recently", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: "https://www.newline.co/courses/build-a-spotify-connected-app"
+  }, "launched a course"), ' ', "that covers everything you need to build a web app with the Spotify API using Node & React."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Here are a few technologies I\u2019ve been working with recently:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+    className: "skill-list"
+  }, skills && skills.map((skill, i) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+    key: i
+  }, " ", skill, " ")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledPic, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "wrapper"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(gatsby_plugin_image__WEBPACK_IMPORTED_MODULE_2__.StaticImage, {
+    className: "img",
+    src: "../../images/me.jpg",
+    width: 500,
+    quality: 95,
+    formats: ['auto', 'webp', 'avif'],
+    alt: "Headshot"
+  })))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (About);
+
+/***/ }),
+
+/***/ "./src/components/sections/hero/index.tsx":
+/*!************************************************!*\
+  !*** ./src/components/sections/hero/index.tsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _hooks_usePrefersReducedMotion__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @hooks/usePrefersReducedMotion */ "./src/hooks/usePrefersReducedMotion.ts");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
+/* harmony import */ var _utils_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @utils/index */ "./src/utils/index.ts");
+/* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/TransitionGroup.js");
+/* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/CSSTransition.js");
+
+
+
+
+
+const StyledHeroSection = styled_components__WEBPACK_IMPORTED_MODULE_3__["default"].section`
+  ${({
+  theme
+}) => theme.mixins.flexCenter};
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 100vh;
+  height: 100vh;
+  padding: 0;
+  
+  @media (max-width: 700px) and (min-width: 700px), (max-width: 360px) {
+    height: auto;
+    padding-top: var(--nav-height);
+  }
+
+  h1 {
+    margin: 0 0 30px 4px;
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: clamp(var(--fz-sm), 5vw, var(--fz-md));
+    font-weight: 400;
+
+    @media (max-width: 480px) {
+      margin: 0 0 20px 20px;
+    }
+  }
+
+  h3 {
+    margin-top: 5px;
+    color: var(--slate);
+    line-height: 0.9;    
+  }
+
+  p {
+    margin: 20px 0 0;
+    max-width: 540px;
+  }
+
+  .email-link {
+    ${({
+  theme
+}) => theme.mixins.bigButton};
+    margin-top: 50px;
+  }
+`;
+const Hero = () => {
+  const {
+    0: isMounted,
+    1: setIsMounted
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const prefersReducedMotion = (0,_hooks_usePrefersReducedMotion__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (prefersReducedMotion) {
+      return;
+    }
+    const timeout = setTimeout(() => setIsMounted(true), _utils_index__WEBPACK_IMPORTED_MODULE_2__.navDelay);
+    return () => clearTimeout(timeout);
+  }, []);
+  const first = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h1", null, "Hi, my name is");
+  const second = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
+    className: "big-heading"
+  }, "TieChuan Hu");
+  const third = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h3", {
+    className: "big-heading"
+  }, "I build things for the web.");
+  const four = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "I\u2019m a software engineer specializing in building (and occasionally designing) exceptional digital experiences. Currently, I\u2019m focused on building accessible, human-centered products at", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: "https://upstatement.com/",
+    target: "_blank",
+    rel: "noreferrer"
+  }, "Upstatement"), "."));
+  const five = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    className: "email-link",
+    href: "https://www.newline.co/courses/build-a-spotify-connected-app",
+    target: "_blank",
+    rel: "noreferrer"
+  }, "Check out my course!");
+  const items = [first, second, third, four, five];
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledHeroSection, null, prefersReducedMotion ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, items.map((item, i) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    key: i
+  }, item))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    content: null
+  }, isMounted && items.map((item, i) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    key: i,
+    classNames: "fadeup",
+    timeout: _utils_index__WEBPACK_IMPORTED_MODULE_2__.loaderDelay
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    style: {
+      transitionDelay: `${i + 1}00ms`
+    }
+  }, item)))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hero);
+
+/***/ }),
+
+/***/ "./src/components/sections/jobs/index.tsx":
+/*!************************************************!*\
+  !*** ./src/components/sections/jobs/index.tsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+Object(function webpackMissingModule() { var e = new Error("Cannot find module '../../../../public/page-data/sq/d/2009693873.json'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @utils/index */ "./src/utils/index.ts");
+
+
+
+const Jobs = () => {
+  const data = Object(function webpackMissingModule() { var e = new Error("Cannot find module '../../../../public/page-data/sq/d/2009693873.json'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+  const jobsData = data.jobs.edges;
+  const {
+    0: tabFocus,
+    1: setTabFocus
+  } = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
+  const onKeyDown = e => {
+    switch (e.key) {
+      case _utils_index__WEBPACK_IMPORTED_MODULE_2__.KEY_CODES.ARROW_UP:
+        e.preventDefault();
+        setTabFocus(tabFocus - 1);
+        break;
+      case _utils_index__WEBPACK_IMPORTED_MODULE_2__.KEY_CODES.ARROW_DOWN:
+        e.preventDefault();
+        setTabFocus(tabFocus + 1);
+        break;
+      default:
+        break;
+    }
+  };
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("h2", {
+    className: "numbered-heading"
+  }, "Where I've worked"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+    className: "inner"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+    role: "tablist",
+    "aria-label": "Job tabs",
+    onKeyDown: e => onKeyDown(e)
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, "aaa"))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Jobs);
+
+/***/ }),
+
 /***/ "./src/components/side/index.tsx":
 /*!***************************************!*\
   !*** ./src/components/side/index.tsx ***!
@@ -5592,7 +6813,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/CSSTransition.js");
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
 /* harmony import */ var _utils_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @utils/index */ "./src/utils/index.ts");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _hooks_usePrefersReducedMotion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @hooks/usePrefersReducedMotion */ "./src/hooks/usePrefersReducedMotion.ts");
+
 
 
 
@@ -5641,7 +6865,17 @@ const Side = props => {
   }, isMounted && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["default"], {
     classNames: isHome ? 'fade' : '',
     timeout: isHome ? _utils_index__WEBPACK_IMPORTED_MODULE_1__.loaderDelay : 0
-  }, children)));
+  }, children))
+  // <>
+  //   {children}
+  // </>
+  );
+};
+
+Side.propTypes = {
+  children: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().node.isRequired),
+  isHome: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().bool),
+  orientation: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().string)
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Side);
 
@@ -5712,7 +6946,7 @@ const StyledSocialList = styled_components__WEBPACK_IMPORTED_MODULE_4__["default
 const Social = props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_side__WEBPACK_IMPORTED_MODULE_2__["default"], {
   isHome: props.isHome,
   orientation: "left"
-}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "aabcd"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledSocialList, null, _config_index__WEBPACK_IMPORTED_MODULE_3__.socialMedia && _config_index__WEBPACK_IMPORTED_MODULE_3__.socialMedia.map(({
+}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(StyledSocialList, null, _config_index__WEBPACK_IMPORTED_MODULE_3__.socialMedia && _config_index__WEBPACK_IMPORTED_MODULE_3__.socialMedia.map(({
   url,
   name
 }, i) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
@@ -5741,6 +6975,7 @@ Social.propTypes = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "colors": () => (/* binding */ colors),
 /* harmony export */   "email": () => (/* binding */ email),
 /* harmony export */   "navLinks": () => (/* binding */ navLinks),
 /* harmony export */   "socialMedia": () => (/* binding */ socialMedia)
@@ -5759,8 +6994,8 @@ const socialMedia = [{
   name: 'Linkedin',
   url: 'https://www.linkedin.com/in/realtimebyte'
 }, {
-  name: 'StackOverflow',
-  url: 'https://stackoverflow.com/users/19140801/realtimebyte'
+  name: 'CodePen',
+  url: 'https://codepen.io/realtimebyte'
 }];
 const navLinks = [{
   name: 'About',
@@ -5775,6 +7010,11 @@ const navLinks = [{
   name: 'Contact',
   url: '/#contact'
 }];
+const colors = {
+  green: '#64ffda',
+  navy: '#0a192f',
+  darkNavy: '#020c1b'
+};
 
 /***/ }),
 
@@ -5898,7 +7138,7 @@ const useScrollDirection = (props = {}) => {
   } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialDirection);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     const threshold = thresholdPixels || 0;
-    const lastScrollY = window.pageYOffset;
+    let lastScrollY = window.pageYOffset;
     let ticking = false;
     const updateScrollDir = () => {
       const scrollY = window.pageYOffset;
@@ -5938,12 +7178,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.esm.js");
 /* harmony import */ var _components_layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @components/layout */ "./src/components/layout/index.tsx");
+/* harmony import */ var _components_sections_hero__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @components/sections/hero */ "./src/components/sections/hero/index.tsx");
+/* harmony import */ var _components_sections_about__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @components/sections/about */ "./src/components/sections/about/index.tsx");
+/* harmony import */ var _components_sections_jobs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @components/sections/jobs */ "./src/components/sections/jobs/index.tsx");
 
 
 
-const StyledMainContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].main`
+
+
+
+const StyledMainContainer = styled_components__WEBPACK_IMPORTED_MODULE_5__["default"].main`
   counter-reset: section;
 `;
 const IndexPage = ({
@@ -5952,7 +7198,7 @@ const IndexPage = ({
   location: location
 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(StyledMainContainer, {
   className: "fillHeight"
-}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "aaa")));
+}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_sections_hero__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_sections_about__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_sections_jobs__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IndexPage);
 
 /***/ }),
@@ -6875,8 +8121,10 @@ const variables = styled_components__WEBPACK_IMPORTED_MODULE_0__.css`
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "KEY_CODES": () => (/* binding */ KEY_CODES),
-/* harmony export */   "loaderDelay": () => (/* binding */ loaderDelay)
+/* harmony export */   "loaderDelay": () => (/* binding */ loaderDelay),
+/* harmony export */   "navDelay": () => (/* binding */ navDelay)
 /* harmony export */ });
+const navDelay = 1000;
 const loaderDelay = 2000;
 const KEY_CODES = {
   ARROW_LEFT: 'ArrowLeft',
@@ -42947,17 +44195,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 module.exports = [];
-
-/***/ }),
-
-/***/ "./public/page-data/sq/d/1994492073.json":
-/*!***********************************************!*\
-  !*** ./public/page-data/sq/d/1994492073.json ***!
-  \***********************************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = JSON.parse('{"data":{"site":{"siteMetadata":{"defaultTitle":"Portfolio","defaultDescription":"LingZhi Jin is a software engineer who specializes in building (and ocassionally designing) websites","siteUrl":"https://www.yourdomain.tld","defaultImage":"./og.png","twitterUsername":"@zinlingzhi"}}}}');
 
 /***/ })
 
