@@ -4,13 +4,15 @@ import { useLocation } from '@reach/router';
 import { useStaticQuery, graphql } from 'gatsby';
 import PropTypes from 'prop-types';
 
+
 const Head = (props: any) => {
 
   const { title, description, image } = props;
   const { pathname } = useLocation();
+ 
   const { site } = useStaticQuery(
     graphql`
-      query HeaderQuery{
+      query {
         site {
           siteMetadata {
             defaultTitle: title
@@ -21,23 +23,23 @@ const Head = (props: any) => {
           }
         }
       }
-    `
-  )
+    `,
+  );
 
   const {
     defaultTitle,
     defaultDescription,
     siteUrl,
     defaultImage,
-    twitterUsername
+    twitterUsername,
   } = site.siteMetadata;
 
   const seo = {
     title: title || defaultTitle,
     description: description || defaultDescription,
     image: `${siteUrl}${image || defaultImage}`,
-    url: `${siteUrl}${pathname}`
-  }
+    url: `${siteUrl}${pathname}`,
+  };
 
   return (
     <Helmet title={title} defaultTitle={seo.title} titleTemplate={`%s | ${defaultTitle}`} >

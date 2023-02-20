@@ -12,6 +12,7 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
+    "dev-plugins": "watch 'kill-port --port 8000 && gatsby develop' plugins ",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -27,7 +28,12 @@
     "gatsby-plugin-sharp": "^5.5.0",
     "gatsby-plugin-sitemap": "^6.5.0",
     "gatsby-plugin-styled-components": "^6.5.0",
+    "gatsby-plugin-typegen": "^3.1.0",
+    "gatsby-plugin-typescript": "^5.6.0",
+    "gatsby-source-filesystem": "^5.6.0",
     "gatsby-transformer-remark": "^6.5.0",
+    "gatsby-transformer-sharp": "^5.6.0",
+    "kill-port": "^2.0.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -38,8 +44,8 @@
   },
   "devDependencies": {
     "@types/animejs": "^3.1.7",
-    "@types/node": "^18.11.18",
-    "@types/react": "^18.0.26",
+    "@types/node": "^18.14.0",
+    "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
     "@types/react-transition-group": "^4.4.5",
     "typescript": "^4.9.4"
