@@ -7,15 +7,15 @@
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-optional-chaining/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-optional-chaining/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-nullish-coalescing-operator/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-nullish-coalescing-operator/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-numeric-separator/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-numeric-separator/lib/index.js",
           "options": {}
         },
         {
@@ -34,15 +34,15 @@
           }
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/gatsby-plugin-image/dist/babel-plugin-parse-static-images.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/gatsby-plugin-image/dist/babel-plugin-parse-static-images.js",
           "options": {
-            "cacheDir": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/.cache/caches/gatsby-plugin-image"
+            "cacheDir": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/.cache/caches/gatsby-plugin-image"
           }
         }
       ],
       "presets": [
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/preset-typescript/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/preset-typescript/lib/index.js",
           "options": {
             "plugins": [],
             "isTSX": false,
@@ -63,21 +63,21 @@
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-optional-chaining/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-optional-chaining/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-nullish-coalescing-operator/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-nullish-coalescing-operator/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-numeric-separator/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-numeric-separator/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/gatsby-plugin-image/dist/babel-plugin-parse-static-images.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/gatsby-plugin-image/dist/babel-plugin-parse-static-images.js",
           "options": {
-            "cacheDir": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/.cache/caches/gatsby-plugin-image"
+            "cacheDir": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/.cache/caches/gatsby-plugin-image"
           }
         },
         {
@@ -98,7 +98,7 @@
       ],
       "presets": [
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/preset-typescript/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/preset-typescript/lib/index.js",
           "options": {
             "plugins": [],
             "isTSX": false,
@@ -119,21 +119,21 @@
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-optional-chaining/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-optional-chaining/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-nullish-coalescing-operator/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-nullish-coalescing-operator/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-numeric-separator/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-numeric-separator/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/gatsby-plugin-image/dist/babel-plugin-parse-static-images.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/gatsby-plugin-image/dist/babel-plugin-parse-static-images.js",
           "options": {
-            "cacheDir": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/.cache/caches/gatsby-plugin-image"
+            "cacheDir": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/.cache/caches/gatsby-plugin-image"
           }
         },
         {
@@ -154,7 +154,7 @@
       ],
       "presets": [
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/preset-typescript/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/preset-typescript/lib/index.js",
           "options": {
             "plugins": [],
             "isTSX": false,
@@ -175,21 +175,21 @@
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-optional-chaining/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-optional-chaining/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-nullish-coalescing-operator/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-nullish-coalescing-operator/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/plugin-proposal-numeric-separator/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/plugin-proposal-numeric-separator/lib/index.js",
           "options": {}
         },
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/gatsby-plugin-image/dist/babel-plugin-parse-static-images.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/gatsby-plugin-image/dist/babel-plugin-parse-static-images.js",
           "options": {
-            "cacheDir": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/.cache/caches/gatsby-plugin-image"
+            "cacheDir": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/.cache/caches/gatsby-plugin-image"
           }
         },
         {
@@ -210,7 +210,7 @@
       ],
       "presets": [
         {
-          "name": "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/@babel/preset-typescript/lib/index.js",
+          "name": "/Users/rooselet/Projects/Github/realtimebyte/Potofolio/node_modules/@babel/preset-typescript/lib/index.js",
           "options": {
             "plugins": [],
             "isTSX": false,
