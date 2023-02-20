@@ -10,7 +10,7 @@ const Head = (props: any) => {
   const { pathname } = useLocation();
   const { site } = useStaticQuery(
     graphql`
-      query {
+      query HeaderQuery{
         site {
           siteMetadata {
             defaultTitle: title

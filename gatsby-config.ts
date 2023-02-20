@@ -1,8 +1,6 @@
 import type { GatsbyConfig } from "gatsby"
 import { colors } from "@config/index"
 
-
-
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `Portfolio`,
@@ -23,6 +21,8 @@ const config: GatsbyConfig = {
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sitemap`,
     `gatsby-plugin-robots-txt`,
+    'gatsby-plugin-typescript',
+    'gatsby-plugin-postcss',
     {
       resolve: `gatsby-plugin-manifest`,
       options: {

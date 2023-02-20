@@ -4911,24 +4911,24 @@ if (false) {} else {
 /***/ }),
 
 /***/ "react-dom/server":
-/*!****************************************************************************************************************!*\
-  !*** external "/Users/rooselet/Projects/Tutorial/React/Gatsby/Git/portfolio/node_modules/react-dom/server.js" ***!
-  \****************************************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** external "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/react-dom/server.js" ***!
+  \**********************************************************************************************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("/Users/rooselet/Projects/Tutorial/React/Gatsby/Git/portfolio/node_modules/react-dom/server.js");
+module.exports = require("/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/react-dom/server.js");
 
 /***/ }),
 
 /***/ "react":
-/*!***********************************************************************************************************!*\
-  !*** external "/Users/rooselet/Projects/Tutorial/React/Gatsby/Git/portfolio/node_modules/react/index.js" ***!
-  \***********************************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** external "/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/react/index.js" ***!
+  \*****************************************************************************************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("/Users/rooselet/Projects/Tutorial/React/Gatsby/Git/portfolio/node_modules/react/index.js");
+module.exports = require("/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/react/index.js");
 
 /***/ }),
 

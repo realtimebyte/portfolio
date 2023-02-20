@@ -1,6 +1,6 @@
 var plugins = [{
       name: 'partytown',
-      plugin: require('/Users/rooselet/Projects/Tutorial/React/Gatsby/Git/portfolio/node_modules/gatsby/dist/internal-plugins/partytown/gatsby-ssr.js'),
+      plugin: require('/Users/rooselet/Projects/Github/realtimebyte/portfolio/node_modules/gatsby/dist/internal-plugins/partytown/gatsby-ssr.js'),
       options: {"plugins":[]},
     }]
 /* global plugins */
