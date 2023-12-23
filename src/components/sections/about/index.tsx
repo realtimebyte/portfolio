@@ -121,10 +121,9 @@ const About = () => {
         <StyledText>
           <div>
             <p>
-              Hello! My name is LingZhi and I enjoy creating things that live on the internet. My
-              interest in web development started back in 2012 when I decided to try editing custom
-              Tumblr themes — turns out hacking together a custom reblog button taught me a lot
-              about HTML &amp; CSS!
+              Hello! I am Bruce, a passionate software engineer with a strong background in web and desktop application development.
+              My journey in development began in 2013 when I relocate to the UK. Since then I've honed my skills in 
+              C#, JavaScript and delved into various industry domains, including Fintech and ServiceNow, and HealthCare.
             </p>
 
             <p>
@@ -149,7 +148,7 @@ const About = () => {
 
             <p>Here are a few technologies I’ve been working with recently:</p>
           </div>
-          <ul className='skill-list'>
+          <ul className='skills-list'>
             {skills && skills.map((skill: any, i: number) => <li key={i}> {skill} </li>)}
           </ul>
         </StyledText>
@@ -157,7 +156,7 @@ const About = () => {
           <div className="wrapper">
             <StaticImage
               className="img"
-              src="../../images/me.jpg"
+              src="../../../images/me.png"
               width={500}
               quality={95}
               formats={['auto', 'webp', 'avif']}

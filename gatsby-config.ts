@@ -30,8 +30,8 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `TieChuan Hu`,
-        short_name: `TieChuan Hu`,
+        name: `Bruce Jin`,
+        short_name: `Bruce Jin`,
         start_url: `/`,
         background_color: `#663399`,
         display: `minimal-ui`,

@@ -7,7 +7,7 @@
     "gatsby"
   ],
   "scripts": {
-    "develop": "gatsby develop",
+    "develop": "gatsby develop -H 0.0.0.0",
     "start": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@types/react-helmet": "^6.1.6",
+    "@types/scrollreveal": "^0.0.11",
     "@types/styled-components": "^5.1.26",
     "animejs": "^3.2.1",
     "gatsby": "^5.4.0",
@@ -43,6 +44,7 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-transition-group": "^4.4.5",
+    "scrollreveal": "^4.0.9",
     "styled-components": "^5.3.6",
     "webpack": "^5.75.0"
   },
